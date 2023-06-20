@@ -1,0 +1,70 @@
+API
+
+Routes - Homes
+
+GET		/api/v1/homes   	- Get all homes
+POST	/api/v1/homes   	- Create a new house
+GET		/api/v1/homes/:id	- Get data of a specific house
+PUT		/api/v1/homes/:id	- Change data in a specific house
+DELETE	/api/v1/homes/:id	- Delete a specific house
+
+Routes - Bookings
+
+GET		/api/v1/bookings    	- Get all bookings
+POST	/api/v1/bookings    	- Create a new booking
+GET		/api/v1/bookings/:id	- Get data of a specific booking
+PUT		/api/v1/bookings/:id	- Change data in a specific booking
+DELETE	/api/v1/bookings/:id	- Delete a specific booking
+
+Routes - Calendars
+
+POST	/api/v1/calendars 	        - Create a new house calendar
+GET		/api/v1/calendars/:homeid	- Get data of a specific house calendar
+PUT		/api/v1/calendars/:homeid	- Change data in a specific house calendar
+DELETE	/api/v1/calendars/:homeid	- Delete a specific house calendar
+
+Routes - Prices
+
+POST	/api/v1/prices 	        - Create a new house price
+GET		/api/v1/prices/:homeid	- Get data of a specific house price
+PUT		/api/v1/prices/:homeid	- Change data in a specific house price
+DELETE	/api/v1/prices/:homeid	- Delete a specific house price
+
+Routes - Homeatts
+
+POST	/api/v1/homeatts 	        - Create a new homeatt
+GET		/api/v1/homeatts/:homeid	- Get data of a specific house homeatt
+PUT		/api/v1/homeatts/:homeid	- Change data in a specific house homeatt
+DELETE	/api/v1/homeatts/:homeid	- Delete a specific house homeatt
+
+Routes - Destinations
+
+GET		/api/v1/destinations 	    - Get all destinations
+POST	/api/v1/destinations 	    - Create a new destination
+GET		/api/v1/destinations/:id	- Get data of a specific destination
+PUT		/api/v1/destinations/:id	- Change data in a specific destination
+DELETE	/api/v1/destinations/:id	- Delete a specific destination
+
+Routes - Contacts
+
+GET		/api/v1/contacts 	    - Get all contacts
+POST	/api/v1/contacts 	    - Create a new contact
+GET		/api/v1/contacts/:id	- Get data of a specific contact
+PUT		/api/v1/contacts/:id	- Change data in a specific contact
+DELETE	/api/v1/contacts/:id	- Delete a specific contact
+
+Routes - Users
+
+GET		/api/v1/users 	    - Get all users
+POST	/api/v1/users 	    - Create a new user
+GET		/api/v1/users/:id	- Get data of a specific user
+PUT		/api/v1/users/:id	- Change data in a specific user
+DELETE	/api/v1/users/:id	- Delete a specific user
+
+Routes - Homeatt-categories
+
+GET		/api/v1/homeatt-categories 	        - Get all homeatt-categories
+POST	/api/v1/homeatt-categories 	        - Create a new homeatt-category
+GET		/api/v1/homeatt-categories/:id	    - Get data of a specific homeatt-category
+PUT		/api/v1/homeatt-categories/:id	    - Change data in a specific homeatt-category
+DELETE	/api/v1/homeatt-categories/:id	    - Delete a specific homeatt-category
