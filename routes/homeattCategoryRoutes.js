@@ -6,7 +6,8 @@ router
     .get(homeattCategoryController.getAllHomeattCategories)
     .post(homeattCategoryController.addHomeattCategory);
 router
-    .route(':id')
+    .route('/:id')
+    .put(homeattCategoryController.editHomeattCategory)
     .delete(homeattCategoryController.deleteHomeattCategory);
 
 module.exports = router;
