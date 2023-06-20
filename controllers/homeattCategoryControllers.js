@@ -34,6 +34,25 @@ const addHomeattCategory = (req, res) => {
         });
 };
 
+// EDIT homeattCategory
+const editHomeattCategory = (req, res) => {
+    knex('homeatt_categories')
+        .where('id', req.params.id)
+        .update({
+            ha_category_name: req.body.ha_category_name,
+        })
+        .then(() => {
+            res.status(200).json({
+                message: `homeattCategory id ${req.params.id} updated.`,
+            });
+        })
+        .catch((err) => {
+            res.status(404).json({
+                message: `Error: Unable to update homeattCategory id ${req.params.id}. ${err}`,
+            });
+        });
+};
+
 // DELETE homeattCategory
 const deleteHomeattCategory = (req, res) => {
     knex('homeatt_categories')
@@ -54,5 +73,6 @@ const deleteHomeattCategory = (req, res) => {
 module.exports = {
     getAllHomeattCategories,
     addHomeattCategory,
+    editHomeattCategory,
     deleteHomeattCategory,
 };
