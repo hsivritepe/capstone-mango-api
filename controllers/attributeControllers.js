@@ -6,13 +6,7 @@ const knex = require('knex')(
 // GET all attributes
 const getAllAttributes = (req, res) => {
     knex('attributes')
-        .select(
-            'attributes.id',
-            'attributes.attribute_name',
-            'homeatt_categories.ha_category_name',
-            'homeatt_categories.id as ha_category_id',
-            'homeatt_categories.ha_category_name'
-        )
+        .select('*', 'attributes.id')
         .join(
             'homeatt_categories',
             'attributes.ha_category_id',
@@ -53,6 +47,7 @@ const addAttribute = (req, res) => {
     knex('attributes')
         .insert({
             attribute_name: req.body.attribute_name,
+            ha_category_id: req.body.ha_category_id,
         })
         .then(() => {
             res.status(200).json({
