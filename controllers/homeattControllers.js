@@ -60,11 +60,7 @@ const getHomeattForHome = (req, res) => {
 
 // LINK an attribute to Home
 const linkAttributeToHome = (req, res) => {
-    if (
-        !req.params.homeId ||
-        !req.params.id ||
-        !req.body.ha_category_id
-    ) {
+    if (!req.params.homeId || !req.params.id) {
         return res.status(400).json({
             message: 'Please enter all required fields.',
         });
