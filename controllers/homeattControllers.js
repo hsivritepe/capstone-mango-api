@@ -8,7 +8,6 @@ const getAllHomeattsForHome = (req, res) => {
     knex('homeatts')
         .select(
             'homeatts.id',
-            'homeatts.ha_category_id',
             'homeatts.home_id',
             'homes.home_vs_name',
             'homeatts.attribute_id',
@@ -24,7 +23,7 @@ const getAllHomeattsForHome = (req, res) => {
         )
         .join(
             'homeatt_categories',
-            'homeatts.ha_category_id',
+            'attributes.ha_category_id',
             '=',
             'homeatt_categories.id'
         )
