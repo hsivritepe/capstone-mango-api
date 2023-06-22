@@ -98,22 +98,6 @@ const linkAllAttributesToHome = (req, res) => {
         homeatts_value: item.homeatts_value,
     }));
 
-    // console.log('desformat', desiredFormat);
-
-    // const testData = req.body;
-    // const newData = testData.map((item) => {
-    //     const { attribute_id, homeatts_value, ha_category_id } = item;
-    //     return {
-    //         home_id: req.params.homeId,
-    //         attribute_id,
-    //         homeatts_value,
-    //         ha_category_id,
-    //     };
-    // });
-    // console.log('newData:', newData);
-
-    // console.log('newData:', newData);
-
     knex('homeatts')
         .insert(desiredFormat)
         .then((data) => {

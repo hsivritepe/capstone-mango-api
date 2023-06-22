@@ -6,6 +6,22 @@ const knex = require('knex')(
 // GET all bookings
 const getAllBookings = (req, res) => {
     knex('bookings')
+        .select('*', 'bookings.id as booking_id')
+        .join('users', 'bookings.user_id', '=', 'users.id')
+        .join(
+            'contacts',
+            'bookings.customer_contact_id',
+            '=',
+            'contacts.id'
+        )
+        .join('homes', 'bookings.home_id', '=', 'homes.id')
+        .join(
+            'destinations',
+            'homes.destination_id',
+            '=',
+            'destinations.id'
+        )
+        .orderBy('bookings.id', 'desc')
         .then((data) => {
             res.status(200).json(data);
         })
