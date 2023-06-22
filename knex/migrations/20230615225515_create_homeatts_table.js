@@ -15,6 +15,9 @@ exports.up = function (knex) {
             .inTable('homeatt_categories');
         table.string('homeatts_value').nullable().defaultTo(null);
         table.timestamps(true, true);
+
+        // Add the composite unique constraint
+        table.unique(['home_id', 'attribute_id']);
     });
 };
 
