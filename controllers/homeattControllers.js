@@ -83,6 +83,51 @@ const linkAttributeToHome = (req, res) => {
         });
 };
 
+// LINK all attributes to Home
+const linkAllAttributesToHome = (req, res) => {
+    if (!req.params.homeId) {
+        return res.status(400).json({
+            message: 'Please enter all required fields.',
+        });
+    }
+    //console.log(typeof req.body);
+    // console.log(req.body);
+    const desiredFormat = req.body.map((item) => ({
+        home_id: item.home_id,
+        attribute_id: item.attribute_id,
+        homeatts_value: item.homeatts_value,
+    }));
+
+    // console.log('desformat', desiredFormat);
+
+    // const testData = req.body;
+    // const newData = testData.map((item) => {
+    //     const { attribute_id, homeatts_value, ha_category_id } = item;
+    //     return {
+    //         home_id: req.params.homeId,
+    //         attribute_id,
+    //         homeatts_value,
+    //         ha_category_id,
+    //     };
+    // });
+    // console.log('newData:', newData);
+
+    // console.log('newData:', newData);
+
+    knex('homeatts')
+        .insert(desiredFormat)
+        .then((data) => {
+            const id = data[0];
+            res.status(201).json({ ...desiredFormat });
+        })
+        .catch((err) => {
+            console.log('reqbody', desiredFormat);
+            res.status(500).json({
+                message: `Error: Can not create the homeatts, ${err.message} --- ${desiredFormat}`,
+            });
+        });
+};
+
 // UNLINK an attribute from Home
 const unlinkAttributeForHome = (req, res) => {
     knex('homeatts')
@@ -107,9 +152,34 @@ const unlinkAttributeForHome = (req, res) => {
         });
 };
 
+// UNLINK all attributes from Home
+const unlinkAllAttributesForHome = (req, res) => {
+    knex('homeatts')
+        .where({
+            home_id: req.params.homeId,
+        })
+        .del()
+        .then((result) => {
+            if (result === 0) {
+                return res.status(400).json({
+                    message: `Home ID ${req.params.homeId} do not have any attributes.`,
+                });
+            }
+
+            res.status(204).json({});
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: `Error: ${err}`,
+            });
+        });
+};
+
 module.exports = {
     getAllHomeattsForHome,
     getHomeattForHome,
     linkAttributeToHome,
+    linkAllAttributesToHome,
     unlinkAttributeForHome,
+    unlinkAllAttributesForHome,
 };
