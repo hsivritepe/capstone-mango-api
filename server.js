@@ -14,6 +14,7 @@ const userRoutes = require('./routes/userRoutes');
 const calendarRoutes = require('./routes/calendarRoutes');
 const homeattCategoryRoutes = require('./routes/homeattCategoryRoutes');
 const attributeRoutes = require('./routes/attributeRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 
 // Middleware
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/calendars', calendarRoutes);
 app.use('/api/v1/homeattcategories', homeattCategoryRoutes);
 app.use('/api/v1/homeattributes', attributeRoutes);
+app.use('/api/v1/contacts', contactRoutes);
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
