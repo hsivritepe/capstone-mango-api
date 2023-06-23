@@ -54,7 +54,7 @@ exports.seed = function (knex) {
                     is_open_for_sale: true,
                 },
                 {
-                    home_vs_name: 'Seaside Retreat',
+                    home_vs_name: 'Villa Seaside',
                     home_real_name: 'Coastal Dream House',
                     ho_contact_id: Math.floor(Math.random() * 20) + 1,
                     destination_id:
@@ -158,7 +158,7 @@ exports.seed = function (knex) {
                     is_open_for_sale: true,
                 },
                 {
-                    home_vs_name: 'Coastal Escape',
+                    home_vs_name: 'Villa Rescape',
                     home_real_name: 'Oceanfront Bliss Retreat',
                     ho_contact_id: Math.floor(Math.random() * 20) + 1,
                     destination_id:
