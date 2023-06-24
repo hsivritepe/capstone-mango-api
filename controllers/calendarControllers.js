@@ -3,30 +3,17 @@ const knex = require('knex')(
     require('../knexfile.js')[process.env.ENVIRONMENT]
 );
 
-// GET all calendars
-const getAllCalendars = (req, res) => {
-    knex('calendars')
-        .then((data) => {
-            res.status(200).json(data);
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `The data you are looking for could not be found. ${err}`,
-            });
-        });
-};
-
 // GET a single calendar
 const getCalendar = (req, res) => {
     knex('calendars')
-        .where({ id: req.params.id })
+        .where({ home_id: req.params.id })
         .then((data) => {
             if (!data.length) {
                 res.status(404).json({
                     message: `Calendar ID ${req.params.id} was not found.`,
                 });
             }
-            res.status(200).json(data[0]);
+            res.status(200).json(data);
         })
         .catch((err) => {
             res.status(400).json({
@@ -101,7 +88,6 @@ const deleteCalendar = (req, res) => {
 };
 
 module.exports = {
-    getAllCalendars,
     getCalendar,
     createCalendar,
     editCalendar,
