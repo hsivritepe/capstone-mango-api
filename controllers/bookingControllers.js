@@ -34,14 +34,17 @@ const getAllBookings = (req, res) => {
 
 // GET a single booking
 const getBooking = (req, res) => {
-    knex('bookings')
-        .where({ id: req.params.id })
+    knex.raw(
+        'SELECT * FROM bookings JOIN homes ON homes.id=bookings.home_id JOIN contacts ON contacts.id=bookings.customer_contact_id WHERE bookings.id = ?',
+        [req.params.id]
+    )
         .then((data) => {
             if (!data.length) {
                 res.status(404).json({
                     message: `Booking ID ${req.params.id} was not found.`,
                 });
             }
+            console.log(data[0]);
             res.status(200).json(data[0]);
         })
         .catch((err) => {
