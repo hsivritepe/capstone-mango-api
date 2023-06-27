@@ -7,7 +7,7 @@ exports.seed = function (knex) {
 
             const seedData = [];
 
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 754; i++) {
                 seedData.push({
                     user_id: Math.floor(Math.random() * 6) + 1,
                     home_id: Math.floor(Math.random() * 21) + 1,
@@ -25,7 +25,7 @@ exports.seed = function (knex) {
 };
 
 function getRandomBookingStatus() {
-    const statuses = ['o', 'r', 'e', 'c'];
+    const statuses = ['Cancelled', 'Reserved', 'Booking'];
     const randomIndex = Math.floor(Math.random() * statuses.length);
     return statuses[randomIndex];
 }

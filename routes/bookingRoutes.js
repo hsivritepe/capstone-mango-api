@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const bookingControler = require('../controllers/bookingControllers');
 
+router.get('/recent', bookingControler.recentBookings);
 router
     .route('/')
     .get(bookingControler.getAllBookings)

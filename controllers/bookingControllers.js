@@ -35,7 +35,7 @@ const getAllBookings = (req, res) => {
 // GET a single booking
 const getBooking = (req, res) => {
     knex.raw(
-        'SELECT * FROM bookings JOIN homes ON homes.id=bookings.home_id JOIN contacts ON contacts.id=bookings.customer_contact_id WHERE bookings.id = ?',
+        'SELECT *, bookings.id as booking_id  FROM bookings JOIN homes ON homes.id=bookings.home_id JOIN contacts ON contacts.id=bookings.customer_contact_id WHERE bookings.id = ?',
         [req.params.id]
     )
         .then((data) => {
@@ -44,7 +44,6 @@ const getBooking = (req, res) => {
                     message: `Booking ID ${req.params.id} was not found.`,
                 });
             }
-            console.log(data[0]);
             res.status(200).json(data[0]);
         })
         .catch((err) => {
@@ -83,10 +82,8 @@ const createBooking = (req, res) => {
 // EDIT booking
 const editBooking = (req, res) => {
     if (
-        !req.body.user_id ||
-        !req.body.home_id ||
-        !req.body.customer_contact_id ||
         !req.body.booking_owner ||
+        !req.body.booking_status ||
         !req.body.check_in ||
         !req.body.check_out
     ) {
@@ -132,10 +129,41 @@ const deleteBooking = (req, res) => {
         });
 };
 
+// RECENT BOOKINGS
+const recentBookings = (req, res) => {
+    knex('bookings')
+        .select('*', 'bookings.id as booking_id')
+        .join('users', 'bookings.user_id', '=', 'users.id')
+        .join(
+            'contacts',
+            'bookings.customer_contact_id',
+            '=',
+            'contacts.id'
+        )
+        .join('homes', 'bookings.home_id', '=', 'homes.id')
+        .join(
+            'destinations',
+            'homes.destination_id',
+            '=',
+            'destinations.id'
+        )
+        .orderBy('bookings.id', 'desc')
+        .limit(5)
+        .then((data) => {
+            res.status(200).json(data);
+        })
+        .catch((err) => {
+            res.status(404).json({
+                message: `The data you are looking for could not be found. ${err}`,
+            });
+        });
+};
+
 module.exports = {
     getAllBookings,
     getBooking,
     createBooking,
     editBooking,
     deleteBooking,
+    recentBookings,
 };

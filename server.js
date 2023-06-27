@@ -8,6 +8,7 @@ const port = process.env.PORT || 5050;
 
 const homeRoutes = require('./routes/homeRoutes');
 const homeattRoutes = require('./routes/homeattRoutes');
+const homeBookingRoutes = require('./routes/homeBookingRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const destinationRoutes = require('./routes/destinationRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -22,6 +23,7 @@ app.use(cors());
 
 app.use('/api/v1/homes', homeRoutes);
 app.use('/api/v1/homes', homeattRoutes);
+app.use('/api/v1/homes', homeBookingRoutes);
 app.use('/api/v1/bookings', bookingRoutes);
 app.use('/api/v1/destinations', destinationRoutes);
 app.use('/api/v1/users', userRoutes);
