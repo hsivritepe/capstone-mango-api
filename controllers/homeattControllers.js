@@ -90,8 +90,6 @@ const linkAllAttributesToHome = (req, res) => {
             message: 'Please enter all required fields.',
         });
     }
-    //console.log(typeof req.body);
-    // console.log(req.body);
     const desiredFormat = req.body.map((item) => ({
         home_id: item.home_id,
         attribute_id: item.attribute_id,
@@ -105,7 +103,6 @@ const linkAllAttributesToHome = (req, res) => {
             res.status(201).json({ ...desiredFormat });
         })
         .catch((err) => {
-            console.log('reqbody', desiredFormat);
             res.status(500).json({
                 message: `Error: Can not create the homeatts, ${err.message} --- ${desiredFormat}`,
             });
