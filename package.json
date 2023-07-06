@@ -4,8 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "env-cmd -f .env.development node server.js",
-        "start:production": "env-cmd -f .env.production node server.js"
+        "start": "env-cmd -f .env.production node server.js",
+        "start:development": "env-cmd -f .env.development node server.js"
     },
     "author": "",
     "license": "ISC",
