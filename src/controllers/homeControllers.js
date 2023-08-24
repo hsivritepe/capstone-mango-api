@@ -1,7 +1,7 @@
 require('dotenv').config();
 console.log(process.env);
 const knex = require('knex')(
-    require('../knexfile')[process.env.ENVIRONMENT]
+    require('../../knexfile')[process.env.ENVIRONMENT]
 );
 
 // GET all homes

@@ -1,11 +1,11 @@
 require('dotenv').config();
 const knex = require('knex')(
-    require('../knexfile.js')[process.env.ENVIRONMENT]
+    require('../../knexfile.js')[process.env.ENVIRONMENT]
 );
 
-// GET all users
-const getAllUsers = (req, res) => {
-    knex('users')
+// GET all contacts
+const getAllContacts = (req, res) => {
+    knex('contacts')
         .then((data) => {
             res.status(200).json(data);
         })
@@ -16,40 +16,37 @@ const getAllUsers = (req, res) => {
         });
 };
 
-// GET a single user
-const getUser = (req, res) => {
-    knex('users')
+// GET a single contact
+const getContact = (req, res) => {
+    knex('contacts')
         .where({ id: req.params.id })
         .then((data) => {
             if (!data.length) {
                 res.status(404).json({
-                    message: `User ID ${req.params.id} was not found.`,
+                    message: `Contact ID ${req.params.id} was not found.`,
                 });
             }
             res.status(200).json(data);
         })
         .catch((err) => {
             res.status(400).json({
-                message: `Error: Unable to retrieve user ID ${req.params.id} : ${err}`,
+                message: `Error: Unable to retrieve contact ID ${req.params.id} : ${err}`,
             });
         });
 };
 
-// CREATE new user
-const createUser = (req, res) => {
+// CREATE new contact
+const createContact = (req, res) => {
     if (
-        !req.body.username ||
-        !req.body.password ||
-        !req.body.email ||
-        !req.body.is_admin ||
         !req.body.first_name ||
-        !req.body.last_name
+        !req.body.last_name ||
+        !req.body.email
     ) {
         return res.status(400).json({
-            message: `Please make sure to provide all information in your request, creating new user failed.`,
+            message: `Please make sure to provide all information in your request, creating new contact failed.`,
         });
     }
-    knex('users')
+    knex('contacts')
         .insert(req.body)
         .then((result) => {
             const id = result[0];
@@ -57,33 +54,31 @@ const createUser = (req, res) => {
         })
         .catch((err) => {
             res.status(500).json({
-                message: `Error: Was not able to create the user. ${err}`,
+                message: `Error: Was not able to create the contact. ${err}`,
             });
         });
 };
 
-// EDIT user
-const editUser = (req, res) => {
+// EDIT contact
+const editContact = (req, res) => {
     if (
-        !req.body.username ||
-        !req.body.password ||
-        !req.body.email ||
-        !req.body.is_admin ||
         !req.body.first_name ||
-        !req.body.last_name
+        !req.body.last_name ||
+        !req.body.email ||
+        !req.body.phone
     ) {
         return res.status(400).json({
-            message: `Please make sure to provide all information in your request, creating new user failed.`,
+            message: `Please make sure to provide all information in your request, creating new contact failed.`,
         });
     }
-    knex('users')
+    knex('contacts')
         .where({ id: req.params.id })
         .update(req.body)
         .then(() => {
-            return knex('users')
+            return knex('contacts')
                 .where({ id: req.params.id })
-                .then((updatedUser) => {
-                    res.json(updatedUser[0]);
+                .then((updatedContact) => {
+                    res.json(updatedContact[0]);
                 })
                 .catch((err) => {
                     res.status(500).json({
@@ -93,15 +88,15 @@ const editUser = (req, res) => {
         });
 };
 
-// DELETE user
-const deleteUser = (req, res) => {
-    knex('users')
+// DELETE contact
+const deleteContact = (req, res) => {
+    knex('contacts')
         .where({ id: req.params.id })
         .del()
         .then((result) => {
             if (result === 0) {
                 return res.status(400).json({
-                    message: `User with ID : ${req.params.id} was not found.`,
+                    message: `Contact with ID : ${req.params.id} was not found.`,
                 });
             }
 
@@ -115,9 +110,9 @@ const deleteUser = (req, res) => {
 };
 
 module.exports = {
-    getAllUsers,
-    getUser,
-    createUser,
-    editUser,
-    deleteUser,
+    getAllContacts,
+    getContact,
+    createContact,
+    editContact,
+    deleteContact,
 };

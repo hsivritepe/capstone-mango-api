@@ -1,6 +1,6 @@
 require('dotenv').config();
 const knex = require('knex')(
-    require('../knexfile.js')[process.env.ENVIRONMENT]
+    require('../../knexfile.js')[process.env.ENVIRONMENT]
 );
 
 // GET all bookings
