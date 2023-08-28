@@ -3,12 +3,12 @@ const userControllers = require('../controllers/userControllers');
 
 router
     .route('/')
-    .get(userControllers.getAllUsers)
-    .post(userControllers.createUser);
+    .get(userControllers.getAllUsersHandler)
+    .post(userControllers.createUserHandler);
 router
     .route('/:id')
-    .get(userControllers.getUser)
-    .put(userControllers.editUser)
-    .delete(userControllers.deleteUser);
+    .get(userControllers.getUserHandler)
+    .put(userControllers.editUserHandler)
+    .delete(userControllers.deleteUserHandler);
 
 module.exports = router;

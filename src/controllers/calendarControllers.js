@@ -1,95 +1,41 @@
-require('dotenv').config();
-const knex = require('knex')(
-    require('../../knexfile.js')[process.env.ENVIRONMENT]
-);
+const calendarService = require('../services/calendarServices');
 
 // GET a single calendar
-const getCalendar = (req, res) => {
-    knex('calendars')
-        .where({ home_id: req.params.id })
-        .then((data) => {
-            if (!data.length) {
-                res.status(404).json({
-                    message: `Calendar ID ${req.params.id} was not found.`,
-                });
-            }
-            res.status(200).json(data);
-        })
-        .catch((err) => {
-            res.status(400).json({
-                message: `Error: Unable to retrieve calendar ID ${req.params.id} : ${err}`,
-            });
-        });
+const getCalendarHandler = async (req, res) => {
+    const result = await calendarService.getCalendar(req.params.id);
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // CREATE new calendar
-const createCalendar = (req, res) => {
-    if (!req.body.calendar_name) {
-        return res.status(400).json({
-            message: `Please make sure to provide all information in your request, creating new calendar failed.`,
-        });
-    }
-    knex('calendars')
-        .insert(req.body)
-        .then((result) => {
-            const id = result[0];
-            res.status(201).json({ id, ...req.body });
-        })
-        .catch((err) => {
-            res.status(500).json({
-                message: `Error: Was not able to create the calendar. ${err}`,
-            });
-        });
+const createCalendarHandler = async (req, res) => {
+    const result = await calendarService.createCalendar(req.body);
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // EDIT calendar
-const editCalendar = (req, res) => {
-    if (!req.body.calendar_name) {
-        return res.status(400).json({
-            message: `Please make sure to provide all information in your request, creating new calendar failed.`,
-        });
-    }
-    knex('calendars')
-        .where({ id: req.params.id })
-        .update(req.body)
-        .then(() => {
-            return knex('calendars')
-                .where({ id: req.params.id })
-                .then((updatedCalendar) => {
-                    res.json(updatedCalendar[0]);
-                })
-                .catch((err) => {
-                    res.status(500).json({
-                        message: `Error: ${err}`,
-                    });
-                });
-        });
+const editCalendarHandler = async (req, res) => {
+    const result = await calendarService.editCalendar(
+        req.params.id,
+        req.body
+    );
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // DELETE calendar
-const deleteCalendar = (req, res) => {
-    knex('calendars')
-        .where({ id: req.params.id })
-        .del()
-        .then((result) => {
-            if (result === 0) {
-                return res.status(400).json({
-                    message: `Calendar with ID : ${req.params.id} was not found.`,
-                });
-            }
+const deleteCalendarHandler = async (req, res) => {
+    const result = await calendarService.deleteCalendar(
+        req.params.id
+    );
 
-            res.status(204).json({});
-        })
-        .catch((err) => {
-            res.status(500).json({
-                message: `Error: Can not delete calendar. ${err}`,
-            });
-        });
+    res.status(result.statusCode).json(result.json);
 };
 
 module.exports = {
-    getCalendar,
-    createCalendar,
-    editCalendar,
-    deleteCalendar,
+    getCalendarHandler,
+    createCalendarHandler,
+    editCalendarHandler,
+    deleteCalendarHandler,
 };

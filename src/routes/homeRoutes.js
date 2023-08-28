@@ -3,12 +3,12 @@ const homeController = require('../controllers/homeControllers');
 
 router
     .route('/')
-    .get(homeController.getAllHomes)
-    .post(homeController.createHome);
+    .get(homeController.getAllHomesHandler)
+    .post(homeController.createHomeHandler);
 router
     .route('/:id')
-    .get(homeController.getHome)
-    .delete(homeController.deleteHome)
-    .put(homeController.editHome);
+    .get(homeController.getHomeHandler)
+    .delete(homeController.deleteHomeHandler)
+    .put(homeController.editHomeHandler);
 
 module.exports = router;

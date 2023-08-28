@@ -3,116 +3,50 @@ const knex = require('knex')(
     require('../../knexfile.js')[process.env.ENVIRONMENT]
 );
 
+const contactService = require('../services/contactServices');
+
 // GET all contacts
-const getAllContacts = (req, res) => {
-    knex('contacts')
-        .then((data) => {
-            res.status(200).json(data);
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `The data you are looking for could not be found. ${err}`,
-            });
-        });
+const getAllContactsHandler = async (req, res) => {
+    const result = await contactService.getAllContacts();
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // GET a single contact
-const getContact = (req, res) => {
-    knex('contacts')
-        .where({ id: req.params.id })
-        .then((data) => {
-            if (!data.length) {
-                res.status(404).json({
-                    message: `Contact ID ${req.params.id} was not found.`,
-                });
-            }
-            res.status(200).json(data);
-        })
-        .catch((err) => {
-            res.status(400).json({
-                message: `Error: Unable to retrieve contact ID ${req.params.id} : ${err}`,
-            });
-        });
+const getContactHandler = async (req, res) => {
+    const result = await contactService.getContact(req.params.id);
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // CREATE new contact
-const createContact = (req, res) => {
-    if (
-        !req.body.first_name ||
-        !req.body.last_name ||
-        !req.body.email
-    ) {
-        return res.status(400).json({
-            message: `Please make sure to provide all information in your request, creating new contact failed.`,
-        });
-    }
-    knex('contacts')
-        .insert(req.body)
-        .then((result) => {
-            const id = result[0];
-            res.status(201).json({ id, ...req.body });
-        })
-        .catch((err) => {
-            res.status(500).json({
-                message: `Error: Was not able to create the contact. ${err}`,
-            });
-        });
+const createContactHandler = async (req, res) => {
+    const result = await contactService.createContact(req.body);
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // EDIT contact
-const editContact = (req, res) => {
-    if (
-        !req.body.first_name ||
-        !req.body.last_name ||
-        !req.body.email ||
-        !req.body.phone
-    ) {
-        return res.status(400).json({
-            message: `Please make sure to provide all information in your request, creating new contact failed.`,
-        });
-    }
-    knex('contacts')
-        .where({ id: req.params.id })
-        .update(req.body)
-        .then(() => {
-            return knex('contacts')
-                .where({ id: req.params.id })
-                .then((updatedContact) => {
-                    res.json(updatedContact[0]);
-                })
-                .catch((err) => {
-                    res.status(500).json({
-                        message: `Error: ${err}`,
-                    });
-                });
-        });
+const editContactHandler = async (req, res) => {
+    const result = await contactService.editContact(
+        req.params.id,
+        req.body
+    );
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // DELETE contact
-const deleteContact = (req, res) => {
-    knex('contacts')
-        .where({ id: req.params.id })
-        .del()
-        .then((result) => {
-            if (result === 0) {
-                return res.status(400).json({
-                    message: `Contact with ID : ${req.params.id} was not found.`,
-                });
-            }
+const deleteContactHandler = async (req, res) => {
+    const result = await contactService.deleteContact(req.params.id);
 
-            res.status(204).json({});
-        })
-        .catch((err) => {
-            res.status(500).json({
-                message: `Error: ${err}`,
-            });
-        });
+    res.status(result.statusCode).json(result.json);
 };
 
 module.exports = {
-    getAllContacts,
-    getContact,
-    createContact,
-    editContact,
-    deleteContact,
+    getAllContactsHandler,
+    getContactHandler,
+    createContactHandler,
+    editContactHandler,
+    deleteContactHandler,
 };

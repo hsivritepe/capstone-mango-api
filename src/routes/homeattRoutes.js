@@ -3,13 +3,13 @@ const homeattController = require('../controllers/homeattControllers');
 
 router
     .route('/:homeId/homeatts')
-    .get(homeattController.getAllHomeattsForHome)
-    .post(homeattController.linkAllAttributesToHome)
-    .delete(homeattController.unlinkAllAttributesForHome);
+    .get(homeattController.getAllHomeattsForHomeHandler)
+    .post(homeattController.linkAllAttributesToHomeHandler)
+    .delete(homeattController.unlinkAllAttributesForHomeHandler);
 router
     .route('/:homeId/homeatts/:id')
-    .get(homeattController.getHomeattForHome)
-    .post(homeattController.linkAttributeToHome)
-    .delete(homeattController.unlinkAttributeForHome);
+    .get(homeattController.getHomeattForHomeHandler)
+    .post(homeattController.linkAttributeToHomeHandler)
+    .delete(homeattController.unlinkAttributeForHomeHandler);
 
 module.exports = router;

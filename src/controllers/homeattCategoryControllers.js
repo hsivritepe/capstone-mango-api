@@ -1,78 +1,44 @@
-require('dotenv').config();
-const knex = require('knex')(
-    require('../../knexfile')[process.env.ENVIRONMENT]
-);
+const homeattCategoryService = require('../services/homeattCategoryServices');
 
 // GET all homeattCategories
-const getAllHomeattCategories = (req, res) => {
-    knex('homeatt_categories')
-        .then((data) => {
-            res.status(200).json(data);
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `The data you are looking for could not be found. ${err}`,
-            });
-        });
+const getAllHomeattCategoriesHandler = async (req, res) => {
+    const result =
+        await homeattCategoryService.getAllHomeattCategories();
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // ADD new homeattCategory
-const addHomeattCategory = (req, res) => {
-    knex('homeatt_categories')
-        .insert({
-            ha_category_name: req.body.ha_category_name,
-        })
-        .then(() => {
-            res.status(200).json({
-                message: `homeattCategory '${req.body.ha_category_name}' added.`,
-            });
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `Error: Unable to add homeattCategory. ${err}`,
-            });
-        });
+const addHomeattCategoryHandler = async (req, res) => {
+    const result = await homeattCategoryService.addHomeattCategory(
+        req.body
+    );
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // EDIT homeattCategory
-const editHomeattCategory = (req, res) => {
-    knex('homeatt_categories')
-        .where('id', req.params.id)
-        .update({
-            ha_category_name: req.body.ha_category_name,
-        })
-        .then(() => {
-            res.status(200).json({
-                message: `homeattCategory id ${req.params.id} updated.`,
-            });
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `Error: Unable to update homeattCategory id ${req.params.id}. ${err}`,
-            });
-        });
+const editHomeattCategoryHandler = async (req, res) => {
+    const result = await homeattCategoryService.editHomeattCategory(
+        req.params.id,
+        req.body
+    );
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // DELETE homeattCategory
-const deleteHomeattCategory = (req, res) => {
-    knex('homeatt_categories')
-        .where('id', req.params.id)
-        .del()
-        .then(() => {
-            res.status(200).json({
-                message: `homeattCategory id ${req.params.id} deleted.`,
-            });
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `Error: Unable to delete homeattCategory id ${req.params.id}. ${err}`,
-            });
-        });
+const deleteHomeattCategoryHandler = async (req, res) => {
+    const result = await homeattCategoryService.deleteHomeattCategory(
+        req.params.id
+    );
+
+    res.status(result.statusCode).json(result.json);
 };
 
 module.exports = {
-    getAllHomeattCategories,
-    addHomeattCategory,
-    editHomeattCategory,
-    deleteHomeattCategory,
+    getAllHomeattCategoriesHandler,
+    addHomeattCategoryHandler,
+    editHomeattCategoryHandler,
+    deleteHomeattCategoryHandler,
 };

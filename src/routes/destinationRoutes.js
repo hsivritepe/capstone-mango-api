@@ -4,13 +4,13 @@ const { route } = require('./bookingRoutes');
 
 router
     .route('/')
-    .get(destinationControllers.getAllDestinations)
-    .post(destinationControllers.createDestination);
+    .get(destinationControllers.getAllDestinationsHandler)
+    .post(destinationControllers.createDestinationHandler);
 
 router
     .route('/:id')
-    .get(destinationControllers.getDestination)
-    .put(destinationControllers.editDestination)
-    .delete(destinationControllers.deleteDestination);
+    .get(destinationControllers.getDestinationHandler)
+    .put(destinationControllers.editDestinationHandler)
+    .delete(destinationControllers.deleteDestinationHandler);
 
 module.exports = router;

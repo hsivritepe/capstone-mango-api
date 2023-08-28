@@ -3,12 +3,12 @@ const contactControllers = require('../controllers/contactControllers');
 
 router
     .route('/')
-    .get(contactControllers.getAllContacts)
-    .post(contactControllers.createContact);
+    .get(contactControllers.getAllContactsHandler)
+    .post(contactControllers.createContactHandler);
 router
     .route('/:id')
-    .get(contactControllers.getContact)
-    .put(contactControllers.editContact)
-    .delete(contactControllers.deleteContact);
+    .get(contactControllers.getContactHandler)
+    .put(contactControllers.editContactHandler)
+    .delete(contactControllers.deleteContactHandler);
 
 module.exports = router;

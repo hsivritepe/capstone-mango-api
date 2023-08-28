@@ -3,6 +3,6 @@ const homeBookingController = require('../controllers/homeBookingControllers');
 
 router
     .route('/:homeId/bookings')
-    .get(homeBookingController.getAllBookingsForHome);
+    .get(homeBookingController.getAllBookingsForHomeHandler);
 
 module.exports = router;

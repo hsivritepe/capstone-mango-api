@@ -1,5 +1,5 @@
 exports.up = function (knex) {
-    return knex.schema.createTable('calendar', function (table) {
+    return knex.schema.createTable('calendars', function (table) {
         table.increments('id').primary();
         table.integer('home_id').unsigned().notNullable();
         table.foreign('home_id').references('id').inTable('homes');
@@ -11,5 +11,5 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-    return knex.schema.dropTable('calendar');
+    return knex.schema.dropTable('calendars');
 };

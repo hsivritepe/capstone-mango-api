@@ -1,84 +1,38 @@
-require('dotenv').config();
-const knex = require('knex')(
-    require('../../knexfile')[process.env.ENVIRONMENT]
-);
+const attributeService = require('../services/attributeServices');
 
 // GET all attributes
-const getAllAttributes = (req, res) => {
-    knex('attributes')
-        .select('*', 'attributes.id')
-        .join(
-            'homeatt_categories',
-            'attributes.ha_category_id',
-            '=',
-            'homeatt_categories.id'
-        )
-        .then((data) => {
-            res.status(200).json(data);
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `The data you are looking for could not be found. ${err}`,
-            });
-        });
+const getAllAttributesHandler = async (req, res) => {
+    const result = await attributeService.getAllAttributes();
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // GET one attribute
-const getAttribute = (req, res) => {
-    knex('attributes')
-        .where('id', req.params.id)
-        .then((data) => {
-            if (!data.length) {
-                res.status(404).json({
-                    message: `The attribute with id: ${req.params.id} could not be found.`,
-                });
-            }
-            res.status(200).json(data[0]);
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `Error: Unable to retrieve attribute id ${req.params.id}. ${err}`,
-            });
-        });
+const getAttributeHandler = async (req, res) => {
+    const result = await attributeService.getAttribute(req.params.id);
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // ADD new attribute
-const addAttribute = (req, res) => {
-    knex('attributes')
-        .insert({
-            attribute_name: req.body.attribute_name,
-            ha_category_id: req.body.ha_category_id,
-        })
-        .then(() => {
-            res.status(200).json({
-                message: `Attribute '${req.body.attribute_name}' added.`,
-            });
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `Error: Unable to add attribute. ${err}`,
-            });
-        });
+const addAttributeHandler = async (req, res) => {
+    const result = await attributeService.addAttribute(req.body);
+
+    res.status(result.statusCode).json(result.json);
 };
 
 // DELETE attribute
-const deleteAttribute = (req, res) => {
-    knex('attributes')
-        .where('id', req.params.id)
-        .del()
-        .then(() => {
-            res.status(200).json({ message: `Attribute deleted.` });
-        })
-        .catch((err) => {
-            res.status(404).json({
-                message: `Error: Unable to delete attribute. ${err}`,
-            });
-        });
+const deleteAttributeHandler = async (req, res) => {
+    const result = await attributeService.deleteAttribute(
+        req.params.id
+    );
+
+    res.status(result.statusCode).json(result.json);
 };
 
 module.exports = {
-    getAllAttributes,
-    getAttribute,
-    addAttribute,
-    deleteAttribute,
+    getAllAttributesHandler,
+    getAttributeHandler,
+    addAttributeHandler,
+    deleteAttributeHandler,
 };

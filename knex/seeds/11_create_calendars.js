@@ -1,6 +1,6 @@
 exports.seed = function (knex) {
-    // Deletes ALL existing entries from the 'calendar' table
-    return knex('calendar')
+    // Deletes ALL existing entries from the 'calendars' table
+    return knex('calendars')
         .del()
         .then(function () {
             // Get home IDs from the 'homes' table
@@ -33,8 +33,8 @@ exports.seed = function (knex) {
                         seedEntries.push(...entries);
                     });
 
-                    // Insert the seed entries into the 'calendar' table
-                    return knex('calendar').insert(seedEntries);
+                    // Insert the seed entries into the 'calendars' table
+                    return knex('calendars').insert(seedEntries);
                 });
         });
 };

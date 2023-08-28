@@ -3,12 +3,12 @@ const attributeControler = require('../controllers/attributeControllers');
 
 router
     .route('/')
-    .get(attributeControler.getAllAttributes)
-    .post(attributeControler.addAttribute);
+    .get(attributeControler.getAllAttributesHandler)
+    .post(attributeControler.addAttributeHandler);
 
 router
     .route('/:id')
-    .get(attributeControler.getAttribute)
-    .delete(attributeControler.deleteAttribute);
+    .get(attributeControler.getAttributeHandler)
+    .delete(attributeControler.deleteAttributeHandler);
 
 module.exports = router;

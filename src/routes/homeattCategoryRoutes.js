@@ -3,11 +3,11 @@ const homeattCategoryController = require('../controllers/homeattCategoryControl
 
 router
     .route('/')
-    .get(homeattCategoryController.getAllHomeattCategories)
-    .post(homeattCategoryController.addHomeattCategory);
+    .get(homeattCategoryController.getAllHomeattCategoriesHandler)
+    .post(homeattCategoryController.addHomeattCategoryHandler);
 router
     .route('/:id')
-    .put(homeattCategoryController.editHomeattCategory)
-    .delete(homeattCategoryController.deleteHomeattCategory);
+    .put(homeattCategoryController.editHomeattCategoryHandler)
+    .delete(homeattCategoryController.deleteHomeattCategoryHandler);
 
 module.exports = router;
