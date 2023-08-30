@@ -2,6 +2,10 @@ require('dotenv').config();
 const knex = require('knex')(
     require('../../knexfile')[process.env.ENVIRONMENT]
 );
+const {
+    addHomeattCategorySchema,
+    editHomeattCategorySchema,
+} = require('../helpers/validationSchemas');
 
 const getAllHomeattCategories = async () => {
     try {
@@ -21,15 +25,18 @@ const getAllHomeattCategories = async () => {
 
 const addHomeattCategory = async (body) => {
     try {
+        const result = await addHomeattCategorySchema.validateAsync(
+            body
+        );
         const data = await knex('homeatt_categories').insert({
-            ha_category_name: body.ha_category_name,
+            ha_category_name: result.ha_category_name,
         });
 
         return {
             status: 'success',
             statusCode: 200,
             json: {
-                message: `homeattCategory '${body.ha_category_name}' added.`,
+                message: `homeattCategory '${result.ha_category_name}' added.`,
             },
         };
     } catch (err) {
@@ -45,10 +52,13 @@ const addHomeattCategory = async (body) => {
 
 const editHomeattCategory = async (id, body) => {
     try {
+        const result = await editHomeattCategorySchema.validateAsync(
+            body
+        );
         const data = await knex('homeatt_categories')
             .where('id', id)
             .update({
-                ha_category_name: body.ha_category_name,
+                ha_category_name: result.ha_category_name,
             });
 
         if (!data) {

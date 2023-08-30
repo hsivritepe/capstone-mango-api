@@ -3,6 +3,10 @@ console.log(process.env);
 const knex = require('knex')(
     require('../../knexfile')[process.env.ENVIRONMENT]
 );
+const {
+    createHomeSchema,
+    editHomeSchema,
+} = require('../helpers/validationSchemas');
 
 const getAllHomes = async () => {
     try {
@@ -67,64 +71,53 @@ const getHome = async (id) => {
 };
 
 const createHome = async (body) => {
-    if (
-        !body.home_vs_name ||
-        !body.home_real_name ||
-        !body.destination_id
-    ) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: 'Please enter all required fields.',
-        };
-    }
-
     try {
-        const data = await knex('homes').insert(body);
+        const result = await createHomeSchema.validateAsync(body);
+        const data = await knex('homes').insert(result);
         const id = data[0];
         return {
             status: 'success',
             statusCode: 201,
-            json: { id, ...body },
+            json: { id, ...result },
         };
     } catch (err) {
         return {
             status: 'error',
             statusCode: 500,
             json: {
-                message: `Error: Can not create the home, ${err.message}`,
+                message: `Error: Can not create the home, ${err}`,
             },
         };
     }
 };
 
 const editHome = async (id, body) => {
-    if (!body.home_vs_name || !body.home_real_name) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: { message: 'Please enter all required fields.' },
-        };
-    }
-
     try {
+        const result = await editHomeSchema.validateAsync(body);
         const data = await knex('homes')
             .where({ id: id })
-            .update(body);
+            .update(result);
 
+        if (data === 0) {
+            return {
+                status: 'error',
+                statusCode: 400,
+                json: {
+                    message: `Error: Home with this id ${id} was not found to update.`,
+                },
+            };
+        }
         return {
-            status: 'error',
-            statusCode: 400,
-            json: {
-                message: `Error: Home with the ID : ${id} was not able to update.`,
-            },
+            status: 'success',
+            statusCode: 200,
+            json: { id, ...result },
         };
     } catch (err) {
         return {
             status: 'error',
             statusCode: 500,
             json: {
-                message: `Error: Home with the ID : ${id} was not able to update.`,
+                message: `Error: Home with the ID : ${id} was not able to update. ${err}`,
             },
         };
     }

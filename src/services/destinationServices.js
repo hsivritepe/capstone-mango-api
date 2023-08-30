@@ -2,6 +2,10 @@ require('dotenv').config();
 const knex = require('knex')(
     require('../../knexfile.js')[process.env.ENVIRONMENT]
 );
+const {
+    createDestinationSchema,
+    editDestinationSchema,
+} = require('../helpers/validationSchemas');
 
 const getAllDestinations = async () => {
     try {
@@ -44,25 +48,19 @@ const getDestination = async (id) => {
 };
 
 const createDestination = async (body) => {
-    if (!body.destination_name) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: {
-                message: `Please make sure to provide all information in your request, creating new destination failed.`,
-            },
-        };
-    }
     try {
+        const result = await createDestinationSchema.validateAsync(
+            body
+        );
         const data = await knex('destinations').insert({
-            destination_name: body.destination_name,
+            destination_name: result.destination_name,
         });
 
         return {
             status: 'success',
             statusCode: 200,
             json: {
-                message: `Destination '${body.destination_name}' added.`,
+                message: `Destination '${result.destination_name}' added.`,
             },
         };
     } catch (err) {
@@ -77,20 +75,14 @@ const createDestination = async (body) => {
 };
 
 const editDestination = async (id, body) => {
-    if (!body.destination_name) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: {
-                message: `Please make sure to provide all information in your request, editing destination failed.`,
-            },
-        };
-    }
     try {
+        const result = await editDestinationSchema.validateAsync(
+            body
+        );
         const data = await knex('destinations')
             .where('id', id)
             .update({
-                destination_name: body.destination_name,
+                destination_name: result.destination_name,
             });
 
         if (!data) {

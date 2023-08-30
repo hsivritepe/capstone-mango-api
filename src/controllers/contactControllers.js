@@ -1,8 +1,3 @@
-require('dotenv').config();
-const knex = require('knex')(
-    require('../../knexfile.js')[process.env.ENVIRONMENT]
-);
-
 const contactService = require('../services/contactServices');
 
 // GET all contacts

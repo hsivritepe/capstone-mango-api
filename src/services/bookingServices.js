@@ -2,6 +2,10 @@ require('dotenv').config();
 const knex = require('knex')(
     require('../../knexfile.js')[process.env.ENVIRONMENT]
 );
+const {
+    createBookingSchema,
+    editBookingSchema,
+} = require('../helpers/validationSchemas');
 
 const getAllBookings = async () => {
     try {
@@ -63,24 +67,9 @@ const getBooking = async (id) => {
 };
 
 const createBooking = async (body) => {
-    if (
-        !body.user_id ||
-        !body.home_id ||
-        !body.customer_contact_id ||
-        !body.check_in ||
-        !body.check_out
-    ) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: {
-                message: `Please make sure to provide all information in your request, creating new booking failed.`,
-            },
-        };
-    }
-
     try {
-        const data = await knex('bookings').insert(body);
+        const result = await createBookingSchema.validateAsync(body);
+        const data = await knex('bookings').insert(result);
         const id = data[0];
 
         return {
@@ -100,25 +89,11 @@ const createBooking = async (body) => {
 };
 
 const editBooking = async (id, body) => {
-    if (
-        !body.booking_owner ||
-        !body.booking_status ||
-        !body.check_in ||
-        !body.check_out
-    ) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: {
-                message: `Please make sure to provide all information in your request, creating new booking failed.`,
-            },
-        };
-    }
-
     try {
+        const result = await editBookingSchema.validateAsync(body);
         const data = await knex('bookings')
             .where({ id: id })
-            .update(body);
+            .update(result);
 
         try {
             const newData = await knex('bookings').where({ id: id });

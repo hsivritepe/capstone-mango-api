@@ -2,6 +2,10 @@ require('dotenv').config();
 const knex = require('knex')(
     require('../../knexfile')[process.env.ENVIRONMENT]
 );
+const {
+    linkAttributeToHomeSchema,
+    linkAllAttributesToHomeSchema,
+} = require('../helpers/validationSchemas');
 
 const getAllHomeattsForHome = async (homeId) => {
     try {
@@ -104,19 +108,22 @@ const linkAttributeToHome = async (homeId, attId, body) => {
             attribute_id: attId,
             ...body,
         };
-        const data = await knex('homeatts').insert(newData);
+        const result = await linkAttributeToHomeSchema.validateAsync(
+            newData
+        );
+        const data = await knex('homeatts').insert(result);
         const id = data[0];
         return {
             status: 'success',
             statusCode: 201,
-            json: { id, ...newData },
+            json: { id, ...result },
         };
     } catch (err) {
         return {
             status: 'error',
             statusCode: 500,
             json: {
-                message: `Error: Can not create the home attribute, ${err.message}`,
+                message: `Error: Can not create the home attribute, ${err}`,
             },
         };
     }
@@ -137,19 +144,23 @@ const linkAllAttributesToHome = async (homeId, body) => {
             attribute_id: item.attribute_id,
             homeatts_value: item.homeatts_value,
         }));
-        const data = await knex('homeatts').insert(desiredFormat);
+        const result =
+            await linkAllAttributesToHomeSchema.validateAsync(
+                desiredFormat
+            );
+        const data = await knex('homeatts').insert(result);
         const id = data[0];
         return {
             status: 'success',
             statusCode: 201,
-            json: { id, ...desiredFormat },
+            json: { id, ...result },
         };
     } catch (err) {
         return {
             status: 'error',
             statusCode: 500,
             json: {
-                message: `Error: Can not create the homeatts, ${err.message} --- ${desiredFormat}`,
+                message: `Error: Can not create the homeatts, ${err}`,
             },
         };
     }

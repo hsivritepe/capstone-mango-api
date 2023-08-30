@@ -3,6 +3,11 @@ const knex = require('knex')(
     require('../../knexfile.js')[process.env.ENVIRONMENT]
 );
 
+const {
+    createCalendarSchema,
+    editCalendarSchema,
+} = require('../helpers/validationSchemas');
+
 // GET all calendars
 const getCalendar = async (homeId) => {
     try {
@@ -33,13 +38,14 @@ const getCalendar = async (homeId) => {
 
 const createCalendar = async (body) => {
     try {
-        const data = await knex('calendars').insert(body);
+        const result = await createCalendarSchema.validateAsync(body);
+        const data = await knex('calendars').insert(result);
         const id = data[0];
 
         return {
             status: 'success',
             statusCode: 201,
-            json: { id, ...body },
+            json: { id, ...result },
         };
     } catch (err) {
         return {
@@ -54,9 +60,10 @@ const createCalendar = async (body) => {
 
 const editCalendar = async (id, body) => {
     try {
+        const result = await editCalendarSchema.validateAsync(body);
         const data = await knex('calendars')
             .where({ id: id })
-            .update(body);
+            .update(result);
 
         return { status: 'success', statusCode: 201, json: data[0] };
     } catch (err) {

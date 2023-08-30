@@ -1,8 +1,3 @@
-require('dotenv').config();
-const knex = require('knex')(
-    require('../../knexfile')[process.env.ENVIRONMENT]
-);
-
 const homeattService = require('../services/homeattServices');
 
 // GET all homeatts for a home

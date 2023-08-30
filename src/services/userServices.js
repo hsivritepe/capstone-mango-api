@@ -2,6 +2,10 @@ require('dotenv').config();
 const knex = require('knex')(
     require('../../knexfile.js')[process.env.ENVIRONMENT]
 );
+const {
+    createUserSchema,
+    editUserSchema,
+} = require('../helpers/validationSchemas');
 
 const getAllUsers = async () => {
     try {
@@ -43,30 +47,14 @@ const getUser = async (id) => {
 };
 
 const createUser = async (body) => {
-    if (
-        !body.username ||
-        !body.password ||
-        !body.email ||
-        !body.is_admin ||
-        !body.first_name ||
-        !body.last_name
-    ) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: {
-                message: `Please make sure to provide all information in your request, creating new user failed.`,
-            },
-        };
-    }
-
     try {
-        const data = await knex('users').insert(body);
+        const result = await createUserSchema.validateAsync(body);
+        const data = await knex('users').insert(result);
         const id = data[0];
         return {
             status: 'success',
             statusCode: 201,
-            json: { id, ...body },
+            json: { id, ...result },
         };
     } catch (err) {
         return {
@@ -80,25 +68,11 @@ const createUser = async (body) => {
 };
 
 const editUser = async (id, body) => {
-    if (
-        !body.username ||
-        !body.password ||
-        !body.email ||
-        !body.is_admin ||
-        !body.first_name ||
-        !body.last_name
-    ) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: {
-                message: `Please make sure to provide all information in your request, creating new user failed.`,
-            },
-        };
-    }
-
     try {
-        const data = await knex('users').where('id', id).update(body);
+        const result = await editUserSchema.validateAsync(body);
+        const data = await knex('users')
+            .where('id', id)
+            .update(result);
         if (!data) {
             return {
                 status: 'error',

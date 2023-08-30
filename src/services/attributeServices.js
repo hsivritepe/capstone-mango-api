@@ -2,6 +2,9 @@ require('dotenv').config();
 const knex = require('knex')(
     require('../../knexfile')[process.env.ENVIRONMENT]
 );
+const {
+    addAttributeSchema,
+} = require('../helpers/validationSchemas');
 
 const getAllAttributes = async () => {
     try {
@@ -52,10 +55,23 @@ const getAttribute = async (id) => {
 
 const addAttribute = async (body) => {
     try {
+        const result = await addAttributeSchema.validateAsync(body);
         const data = await knex('attributes').insert({
-            attribute_name: body.attribute_name,
-            ha_category_id: body.ha_category_id,
+            attribute_name: result.attribute_name,
+            ha_category_id: result.ha_category_id,
         });
+
+        // check if insert was successful
+        if (!data) {
+            return {
+                status: 'error',
+                statusCode: 404,
+                json: {
+                    message: `Error: Unable to create attribute.`,
+                },
+            };
+        }
+
         return {
             status: 'success',
             statusCode: 200,
@@ -63,12 +79,12 @@ const addAttribute = async (body) => {
                 message: `Attribute '${body.attribute_name}' added.`,
             },
         };
-    } catch (err) {
+    } catch (error) {
         return {
             status: 'error',
             statusCode: 404,
             json: {
-                message: `Error: Unable to create attribute. ${err}`,
+                message: `Error: Unable to create attribute. ${error}`,
             },
         };
     }

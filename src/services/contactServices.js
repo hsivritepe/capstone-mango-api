@@ -3,6 +3,11 @@ const knex = require('knex')(
     require('../../knexfile.js')[process.env.ENVIRONMENT]
 );
 
+const {
+    createContactSchema,
+    editContactSchema,
+} = require('../helpers/validationSchemas');
+
 // GET all contacts
 const getAllContacts = async () => {
     try {
@@ -62,18 +67,9 @@ const getContact = async (id) => {
 
 // CREATE new contact
 const createContact = async (body) => {
-    if (!body.first_name || !body.last_name || !body.email) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: {
-                message: `Please make sure to provide all information in your request, creating new contact failed.`,
-            },
-        };
-    }
-
     try {
-        const data = await knex('contacts').insert(body);
+        const result = await createContactSchema.validateAsync(body);
+        const data = await knex('contacts').insert(result);
         if (!data.length) {
             return {
                 status: 'error',
@@ -88,14 +84,14 @@ const createContact = async (body) => {
         return {
             status: 'success',
             statusCode: 201,
-            json: { id, ...body },
+            json: { id, ...result },
         };
     } catch (err) {
         return {
             status: 'error',
             statusCode: 404,
             json: {
-                message: `Error: Unable to retrieve contact ID ${id} : ${err}`,
+                message: `Error: Unable to retrieve contact ${err}`,
             },
         };
     }
@@ -103,25 +99,11 @@ const createContact = async (body) => {
 
 // EDIT contact
 const editContact = async (id, body) => {
-    if (
-        !body.first_name ||
-        !body.last_name ||
-        !body.email ||
-        !body.phone
-    ) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: {
-                message: `Please make sure to provide all information in your request, creating new contact failed.`,
-            },
-        };
-    }
-
     try {
+        const result = await editContactSchema.validateAsync(body);
         const data = await knex('contacts')
             .where('id', id)
-            .update(body);
+            .update(result);
         if (!data) {
             return {
                 status: 'error',
@@ -135,14 +117,14 @@ const editContact = async (id, body) => {
         return {
             status: 'success',
             statusCode: 201,
-            json: { id, ...newData },
+            json: { id, ...result },
         };
     } catch (err) {
         return {
             status: 'error',
             statusCode: 404,
             json: {
-                message: `Error: Unable to retrieve contact ID ${id} : ${err}`,
+                message: `Error: Unable to retrieve contact ${err}`,
             },
         };
     }
