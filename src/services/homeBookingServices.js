@@ -23,13 +23,12 @@ const getAllBookingsForHome = async (homeId) => {
             )
             .where('bookings.home_id', homeId)
             .orderBy('bookings.id', 'desc');
-
         if (!data.length) {
             return {
                 status: 'error',
                 statusCode: 404,
                 json: {
-                    message: `The data you are looking for could not be found.`,
+                    message: `There are no bookings for that home ID : ${homeId}`,
                 },
             };
         }

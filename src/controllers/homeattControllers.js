@@ -30,16 +30,6 @@ const linkAttributeToHomeHandler = async (req, res) => {
     res.status(result.statusCode).json(result.json);
 };
 
-// LINK all attributes to Home
-const linkAllAttributesToHomeHandler = async (req, res) => {
-    const result = await homeattService.linkAllAttributesToHome(
-        req.params.homeId,
-        req.body
-    );
-
-    res.status(result.statusCode).json(result.json);
-};
-
 // UNLINK an attribute from Home
 const unlinkAttributeForHomeHandler = async (req, res) => {
     const result = await homeattService.unlinkAttributeForHome(
@@ -50,20 +40,9 @@ const unlinkAttributeForHomeHandler = async (req, res) => {
     res.status(result.statusCode).json(result.json);
 };
 
-// UNLINK all attributes from Home
-const unlinkAllAttributesForHomeHandler = async (req, res) => {
-    const result = await homeattService.unlinkAllAttributesForHome(
-        req.params.homeId
-    );
-
-    res.status(result.statusCode).json(result.json);
-};
-
 module.exports = {
     getAllHomeattsForHomeHandler,
     getHomeattForHomeHandler,
     linkAttributeToHomeHandler,
-    linkAllAttributesToHomeHandler,
     unlinkAttributeForHomeHandler,
-    unlinkAllAttributesForHomeHandler,
 };

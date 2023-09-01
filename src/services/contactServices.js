@@ -131,7 +131,7 @@ const editContact = async (id, body) => {
 };
 
 // DELETE contact
-const deleteContact = async () => {
+const deleteContact = async (id) => {
     if (!id) {
         return {
             status: 'error',
@@ -143,8 +143,8 @@ const deleteContact = async () => {
     }
 
     try {
-        const data = await knex('contacts').where('id', id);
-        if (!data.length) {
+        const data = await knex('contacts').where('id', id).del();
+        if (!data) {
             return {
                 status: 'error',
                 statusCode: 404,
@@ -153,19 +153,19 @@ const deleteContact = async () => {
                 },
             };
         }
-        const id = data[0];
-
         return {
             status: 'success',
-            statusCode: 201,
-            json: { id, ...data },
+            statusCode: 200,
+            json: {
+                message: `Destination id ${id} deleted.`,
+            },
         };
     } catch (err) {
         return {
             status: 'error',
             statusCode: 404,
             json: {
-                message: `Error: Unable to retrieve contact ID ${id} : ${err}`,
+                message: `Error: Unable to delete contact id ${id}. ${err}`,
             },
         };
     }

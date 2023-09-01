@@ -129,43 +129,6 @@ const linkAttributeToHome = async (homeId, attId, body) => {
     }
 };
 
-const linkAllAttributesToHome = async (homeId, body) => {
-    if (!homeId) {
-        return {
-            status: 'error',
-            statusCode: 400,
-            json: { message: 'Please enter all required fields.' },
-        };
-    }
-
-    try {
-        const desiredFormat = body.map((item) => ({
-            home_id: item.home_id,
-            attribute_id: item.attribute_id,
-            homeatts_value: item.homeatts_value,
-        }));
-        const result =
-            await linkAllAttributesToHomeSchema.validateAsync(
-                desiredFormat
-            );
-        const data = await knex('homeatts').insert(result);
-        const id = data[0];
-        return {
-            status: 'success',
-            statusCode: 201,
-            json: { id, ...result },
-        };
-    } catch (err) {
-        return {
-            status: 'error',
-            statusCode: 500,
-            json: {
-                message: `Error: Can not create the homeatts, ${err}`,
-            },
-        };
-    }
-};
-
 const unlinkAttributeForHome = async (homeId, attId) => {
     try {
         const data = await knex('homeatts')
@@ -195,39 +158,9 @@ const unlinkAttributeForHome = async (homeId, attId) => {
     }
 };
 
-const unlinkAllAttributesForHome = async (homeId) => {
-    try {
-        const data = await knex('homeatts')
-            .where({
-                home_id: homeId,
-            })
-            .del();
-        if (data === 0) {
-            return {
-                status: 'error',
-                statusCode: 400,
-                json: {
-                    message: `Home ID ${homeId} do not have an Attributes.`,
-                },
-            };
-        }
-        return { status: 'success', statusCode: 204, json: {} };
-    } catch (err) {
-        return {
-            status: 'error',
-            statusCode: 500,
-            json: {
-                message: `Error: ${err}`,
-            },
-        };
-    }
-};
-
 module.exports = {
     getAllHomeattsForHome,
     getHomeattForHome,
     linkAttributeToHome,
-    linkAllAttributesToHome,
     unlinkAttributeForHome,
-    unlinkAllAttributesForHome,
 };
