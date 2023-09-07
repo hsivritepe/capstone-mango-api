@@ -55,6 +55,13 @@ knex seed:run
 ```
 npm run start:development
 ```
+
+<p>8. Depending on your port setting, you can reach out to the API documentation on /docs folder.</p>
+
+```
+example: http://localhost:5050/docs/
+```
+
 BONUS
 
 you can execute the ./delete_tables.sh script to delete the database and execute knex migrate and knex seed commands from your command line.
